@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../ch2/instantiate.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      WebAssembly.compileStreaming(fetch("helloWithOuterFunc.wasm")).then(
+        (mod) => {
+          const imports = WebAssembly.Module.imports(mod)
+          console.log("imports[0]", imports[0])
+          const exports = WebAssembly.Module.exports(mod)
+          console.log("exports", exports)
+        }
+      )
+      const importObject = {
+        imports: {
+          log_func: (arg) => {
+            alert("you are " + arg + " years old")
+          },
+        },
+      }
+
+      fetchAndInstantiate("helloWithOuterFunc.wasm", importObject).then(
+        (instance) => console.log(instance.exports.log_how_old(2023, 1996))
+      )
+    </script>
+  </body>
+</html>
