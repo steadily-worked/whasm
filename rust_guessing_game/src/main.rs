@@ -37,7 +37,10 @@ fn main() {
             // match: 각 요소들을 확인 후 맞아떨어지면 return, 아닐 경우 넘어감.
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => println!("You win!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
         }
     }
 }
