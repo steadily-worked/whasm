@@ -1,5 +1,5 @@
 [package]
-name = "hello_world"
+name = "rust_guessing_game"
 version = "0.1.0"
 edition = "2021"
 
