@@ -1,3 +1,5 @@
+use std::io;
+
 fn main() {
     let mut x = 5; // let으로 선언한 경우 재할당 불가. 자바스크립트의 const와 같음
     println!("The value of x is: {x}");
@@ -25,6 +27,7 @@ fn main() {
     // mut: 기존의 타입을 변경할 수 없음.
 
     types();
+    find_index();
 }
 
 fn types() {
@@ -71,4 +74,24 @@ fn types() {
     let a: [i32; 5] = [3; 5]; // 이 경우 [3, 3, 3, 3, 3]의 Array가 생성됨
     let _first = a[0];
     let _second = a[1];
+}
+
+fn find_index() {
+    let a = [1, 2, 3, 4, 5];
+
+    println!("Please enter an array index.");
+
+    let mut index = String::new();
+
+    io::stdin()
+        .read_line(&mut index)
+        .expect("Failed to read line.");
+
+    let index: usize = index
+        .trim()
+        .parse()
+        .expect("Index entered was not a number");
+
+    let element = a[index];
+    println!("The value of the element at index {index} is: {element}")
 }
