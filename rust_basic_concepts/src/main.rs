@@ -30,13 +30,14 @@ fn main() {
     find_index();
     statements_and_expressions();
     // main 함수가 실행된 후에 main 함수에 나타나는 순서대로 함수가 실행됨.
+    if_func();
 }
 
 fn types(value: i32, unit_label: char) {
     println!("x: {value}, unit_label: {unit_label}");
     // 단일 값을 나타태는 scalar 타입: integer, floating-point numbers, Booleans, characters.
     // signed: 부호있음(정수), unsigned: 부호없음(양수).
-    // signed: -2^(n-1) ~ 2^(n-1)-1의 범위를 가짐. ex) `i32``: `-2^31` ~ `2^31-1`. 정수의 기본값은 `i32`
+    // signed: -2^(n-1) ~ 2^(n-1)-1의 범위를 가짐. ex) `i32`: `-2^31` ~ `2^31-1`. 정수의 기본값은 `i32`
     // 자바스크립트와 같이 1000을 1_000으로 표현할 수 있음.
 
     // addition
@@ -115,4 +116,15 @@ fn statements_and_expressions() {
     let _five = five();
     let five_plus_one = plus_one(_five);
     println!("z: {z}, five: {_five}, five + one = {five_plus_one}")
+}
+
+// Rust는 자바스크립트(!!)처럼 Boolean 타입이 아닌 값을 Boolean type으로 변환하는 방법이 없음.
+// if - else if문에서 첫번째 true 조건을 확인하면 나머지는 확인하지 않음.
+// 다른 언어들과 마찬가지로 if-else문을 너무 많이 사용할 경우 복잡해지므로 두개 이상 있는 경우 `match` 사용을 권장
+fn if_func() {
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+    // 각 if-else문에서 리턴하는 타입은 무조건 같아야함. 다를 경우 `error[E0308]: `if` and `else` have incompatible types` 리턴
+
+    println!("the value of number is: {number}");
 }
