@@ -26,11 +26,13 @@ fn main() {
     // shadowing: let 키워드를 사용해서 재할당을 하는 경우 이름은 동일하게 쓰지만 타입은 변경할 수 있음.
     // mut: 기존의 타입을 변경할 수 없음.
 
-    types();
+    types(5);
     find_index();
+    // main 함수가 실행된 후에 main 함수에 나타나는 순서대로 함수가 실행됨.
 }
 
-fn types() {
+fn types(x: i32) {
+    println!("x: {x}");
     // 단일 값을 나타태는 scalar 타입: integer, floating-point numbers, Booleans, characters.
     // signed: 부호있음(정수), unsigned: 부호없음(양수).
     // signed: -2^(n-1) ~ 2^(n-1)-1의 범위를 가짐. ex) `i32``: `-2^31` ~ `2^31-1`. 정수의 기본값은 `i32`
