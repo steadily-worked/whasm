@@ -54,20 +54,41 @@ fn main() {
     // 4. 문자 타입 (char)
     // 5. 튜플(Copy를 구현하는 타입들만 포함되어있는 튜플). ex) (i32, i32) ok, (i32, String) x
 
-    let s = String::from("hello");
-    takes_ownership(s); // s의 값이 takes_ownership 함수 내부로 이동하게 된다. 그리하여 더이상 여기서는 유효하지 않다.
-                        // 여기서부터 s는 유효하지 않은 상태이므로, s를 사용하려고 하면 컴파일 에러가 발생한다.
+    {
+        let s = String::from("hello");
+        takes_ownership(s); // s의 값이 takes_ownership 함수 내부로 이동하게 된다. 그리하여 더이상 여기서는 유효하지 않다.
+                            // 여기서부터 s는 유효하지 않은 상태이므로, s를 사용하려고 하면 컴파일 에러가 발생한다.
 
-    let x: i32 = 5;
-    makes_copy(x) // x가 makes_copy 함수로 이동하게 되지만, i32는 Copy가 가능하기에 x는 여전히 유효하다.
+        let x: i32 = 5;
+        makes_copy(x) // x가 makes_copy 함수로 이동하게 되지만, i32는 Copy가 가능하기에 x는 여전히 유효하다.
+    }
+
+    {
+        let _s1 = gives_ownership(); // `gives_ownership()` 함수는 리턴값의 소유권을 `s1`으로 이전시킨다.
+        let s2 = String::from("hello"); // `s2`가 스코프에 들어온다.
+        let _s3 = takes_and_gives_back(s2); // `s2`가 `takes_and_gives_back` 함수로 이동하게 되며, 이 함수의 리턴값이 `s3`으로 소유권이 이전된다.
+                                            // 즉 이 함수는 소유권을 함수로 이전했다가 다시 돌려주는 함수인 것이다.
+    }
 }
 
 fn takes_ownership(some_string: String) {
-    // some_string이 이 스코프로 들어오게 되며
+    // some_string이 이 스코프로 들어오며
     println!("{}", some_string);
 } // 여기서 some_string이 스코프로부터 빠져나가고 `drop` 함수가 실행된다. 메모리가 해제된다.
 
 fn makes_copy(some_integer: i32) {
-    // some_integer가 스코프로 들어오게 되며
+    // some_integer가 스코프로 들어오며
     println!("{}", some_integer);
 } // 여기서 some_integer이 스코프로부터 빠져나가지만 특별한 일이 발생하진 않는다.
+
+fn gives_ownership() -> String {
+    // 이 함수는, return value를 함수 내부로 옮기고 실행시킨다.
+    let some_string = String::from("yours"); // `some_string`이 스코프에 들어온다.
+    some_string // `some_string`이 리턴되며 이 함수를 호출한 함수로 빠져나가게 된다.
+}
+
+// String을 파라미터로 받아와서 하나를 반환한다.
+fn takes_and_gives_back(a_string: String) -> String {
+    // `a_string`이 스코프에 들어온다.
+    a_string // a_string이 리턴되며, 이 함수를 호출한 함수로 빠져나가게 된다.
+}
