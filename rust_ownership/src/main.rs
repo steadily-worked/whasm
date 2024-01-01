@@ -69,6 +69,12 @@ fn main() {
         let _s3 = takes_and_gives_back(s2); // `s2`가 `takes_and_gives_back` 함수로 이동하게 되며, 이 함수의 리턴값이 `s3`으로 소유권이 이전된다.
                                             // 즉 이 함수는 소유권을 함수로 이전했다가 다시 돌려주는 함수인 것이다.
     }
+
+    {
+        let s1 = String::from("hello");
+        let (s2, len) = calculate_length(s1);
+        println!("The length of '{}' is {}.", s2, len);
+    }
 }
 
 fn takes_ownership(some_string: String) {
@@ -91,4 +97,9 @@ fn gives_ownership() -> String {
 fn takes_and_gives_back(a_string: String) -> String {
     // `a_string`이 스코프에 들어온다.
     a_string // a_string이 리턴되며, 이 함수를 호출한 함수로 빠져나가게 된다.
+}
+
+fn calculate_length(s: String) -> (String, usize) {
+    let length = s.len(); // len()은 String의 length를 리턴
+    (s, length)
 }
