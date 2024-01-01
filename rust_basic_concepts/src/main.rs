@@ -26,13 +26,14 @@ fn main() {
     // shadowing: let 키워드를 사용해서 재할당을 하는 경우 이름은 동일하게 쓰지만 타입은 변경할 수 있음.
     // mut: 기존의 타입을 변경할 수 없음.
 
-    types(5);
+    types(5, 'h');
     find_index();
+    statements_and_expressions();
     // main 함수가 실행된 후에 main 함수에 나타나는 순서대로 함수가 실행됨.
 }
 
-fn types(x: i32) {
-    println!("x: {x}");
+fn types(value: i32, unit_label: char) {
+    println!("x: {value}, unit_label: {unit_label}");
     // 단일 값을 나타태는 scalar 타입: integer, floating-point numbers, Booleans, characters.
     // signed: 부호있음(정수), unsigned: 부호없음(양수).
     // signed: -2^(n-1) ~ 2^(n-1)-1의 범위를 가짐. ex) `i32``: `-2^31` ~ `2^31-1`. 정수의 기본값은 `i32`
@@ -96,4 +97,22 @@ fn find_index() {
 
     let element = a[index];
     println!("The value of the element at index {index} is: {element}")
+}
+
+fn statements_and_expressions() {
+    fn five() -> i32 {
+        5 // five func의 return값. 5의 타입이 i32이므로 func의 타입도 i32임
+    }
+    fn plus_one(x: i32) -> i32 {
+        return x + 1; // 혹은 x + 1.  세미콜론을 붙여서 표현식으로 만들려면 반드시 return문과 함께해야함.
+    }
+
+    let _y = 6; // statement는 value를 리턴하지 않고 특정한 액션을 취함. expressions(표현식)는 값으로 평가됨.
+    let z = {
+        let x = 3;
+        x + 1 // 표현식에는 세미콜론을 붙이지 않으며, 세미콜론을 붙일 경우 statement의 형태를 취하고, 값을 리턴하지 않게 됨.
+    };
+    let _five = five();
+    let five_plus_one = plus_one(_five);
+    println!("z: {z}, five: {_five}, five + one = {five_plus_one}")
 }
