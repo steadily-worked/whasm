@@ -35,6 +35,18 @@ fn main() {
               // 자바스크립트의 Switch랑 비슷해보인다.
         }
     }
+    // 위의 match 부분은 Quarter에 대해서만 print를 뱉는다면 아래의 if let을 사용하여 변경할 수 있다.
+    {
+        fn _value_in_cents(coin: Coin) {
+            let mut _count = 0;
+            if let Coin::Quarter(state) = coin {
+                println!("State quarter from {:?}!", state);
+            } else {
+                _count += 1;
+            }
+        }
+    }
+
     value_in_cents(Coin::Quarter(UsState::Alabama)); // Coin 이넘의 Quarter값을 불러오는데, Quarter 값은 파라미터로 UsState를 받으므로 마찬가지로 UsState에서 사용할 enum값을 가져온다.
 
     {
