@@ -8,7 +8,7 @@ struct Rectangle {
 impl Rectangle {
     fn area(&self) -> u32 {
         // self: Rectangle 구조체 자체를 의미함.
-        // 소유권을 가져오는 것이 목적이 아니므로 &self. 호출한 인스턴스의 값을 변경하고 싶다면 매개변수로 `&mut self``를 사용하면 된다.
+        // 소유권을 가져오는 것이 목적이 아니므로 &self. 호출한 인스턴스의 값을 변경하고 싶다면 매개변수로 `&mut self`를 사용하면 된다.
         self.width * self.height
     }
     fn width(&self) -> bool {

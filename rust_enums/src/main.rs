@@ -49,7 +49,7 @@ fn main() {
         // Quit: 연관된 데이터가 전혀 없다.
         // Move: 구조체처럼 이름이 있는 필드를 가진다.
         // Write: 하나의 String을 가진다.
-        // ChangeColor: 3개의 `i32`를 가진다.
+        // ChangeColor: 3개의 `i32`를 가진다(튜플).
 
         // 위의 Message 이넘은 아래처럼 4개의 구조체를 가진 것과 같다.
         struct _QuitMessage; // 유닛 구조체

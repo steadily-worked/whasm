@@ -56,7 +56,7 @@ fn main() {
             // match 내부의 갈래(arm)의 패턴들은 모든 가능한 경우를 다뤄야 한다.
             // 아래 매치 함수의 경우, 예를 들어 `None => None`이 없었다면, `plus_one(None)`으로 불러왔을 때 에러가 생길 것이다. 이 match가 None에 대해서는 커버를 해주고 있지 않기 때문에.
             // 다행히도 이런 부분을 Rust 컴파일러가 잡아서 에러를 던진다. `non-exhaustive patterns: `None` not covered`
-            // Option<T>를 사용할 때, 이렇게 None을 다루는 것을 깜빡하더라고 Rust가 알아채고 알려주기 때문에 Rust의 match와의 궁합이 좋다. Null일지도 모를 값을 갖고 있어서 발생할 수 있는 실수를 불가능하게 만든다.
+            // Option<T>를 사용할 때, 이렇게 None을 다루는 것을 깜빡하더라도 Rust가 알아채고 알려주기 때문에 Rust의 match와의 궁합이 좋다. Null일지도 모를 값을 갖고 있어서 발생할 수 있는 실수를 불가능하게 만든다.
             match x {
                 None => None,
                 Some(i) => Some(i + 1),
