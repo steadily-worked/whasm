@@ -72,7 +72,89 @@ fn main() {
     }
 
     {
-        let s1 = String::from("hello");
-        let h = s1[0]; // String` cannot be indexed by `{integer}`
+        let _s1 = String::from("hello");
+        // let h = s1[0]; // String` cannot be indexed by `{integer}`
+    }
+
+    {
+        use std::collections::HashMap; // collection 중 제일 덜 자주 사용되는 것이라 prelude의 자동으로 가져오는 기능에는 포함되어있지 않다.
+
+        let mut scores = HashMap::new(); // 빈 해시맵 생성
+        scores.insert(String::from("Blue"), 10); // 블루팀은 10점,
+        scores.insert(String::from("Yellow"), 50); // 옐로팀은 50점에서 시작
+
+        let team_name = String::from("Blue");
+        let score = scores.get(&team_name).copied().unwrap_or(0);
+        // `get`은 `Option<&V>`를 반환함. 이 해시맵에 대한 키가 없다면 `None`을 반환함.
+        // `copied`를 호출하여 `Option<&i32>`가 아닌 `Option<i32>`를 얻어온 다음 `unwrap_or`를 사용하여 `scores`가 해당 키에 대한 아이템을 갖고 있지 않을 경우 `score`에 0을 설정하도록 처리한다.
+
+        // 벡터에서와 유사한 방식으로 for 루프를 사용하여 해시맵 내의 키/값 쌍에 대한 반복 작업을 수행할 수 있다.
+        for (key, value) in &scores {
+            println!("{key}: {value}");
+        }
+    }
+    {
+        use std::collections::HashMap;
+
+        let field_name = String::from("Favorite color");
+        let field_value = String::from("Blue");
+
+        let mut map = HashMap::new();
+        map.insert(&field_name, &field_value);
+        println!("{field_name}"); // value borrowed here after move
+                                  // 키와 값이 삽입되는 순간, 이들(field_name, field_value)은 해시맵의 소유가 된다.
+                                  // 값들에 참조자(&)를 삽입하면 되지만, 참조자가 가리키고 있는 값이 해시맵이 유효할 때까지 계속 유효해야 한다.
+    }
+    {
+        use std::collections::HashMap;
+
+        let mut scores = HashMap::new();
+
+        scores.insert(String::from("Blue"), 10);
+        scores.insert(String::from("Blue"), 25);
+
+        println!("{:?}", scores); // {"Blue": 25}를 출력함. 덮어씌워짐. 각각의 유일한 키는 연관된 값을 딱 하나만 가질 수 있기 때문이다.
+
+        scores.entry(String::from("Blue")).or_insert(50); // 값이 Blue인 키를 갖고 있는지 확인하고, 없으면 50을 삽입
+        println!("{:?}", scores); // 여전히 25를 출력함. 값이 Blue인 키가 이미 있었으므로.
+    }
+    {
+        // 예전 값에 기초하여 값을 업데이트하기
+
+        use std::collections::HashMap;
+
+        let text = "hello world wonderful world";
+
+        let mut map = HashMap::new();
+
+        for word in text.split_whitespace() {
+            // 텍스트를 공백 기준으로 분류한 뒤
+            let count = map.entry(word).or_insert(0); // word가 이미 있던 것이면 pass, 없을 때만 0으로 새로운 값 삽입.
+            *count += 1; // count의 값을 1 추가
+                         // 이렇게 되면 최초 1회 외에 더이상 등장하지 않는 단어들은 추가되지 않는다.
+                         // count 변수에 가변 참조자를 저장했기 때문에, 여기에 값을 할당하기 위해 먼저 asterisk(*)를 사용하여 count를 역참조해야 한다.
+        }
+
+        println!("{:?}", map);
+
+        {
+            let mut map = HashMap::new();
+            let mut a = vec![1, 2, 100, 3, 4, 5, 6, 7, 9, 3, 7, 100, 37, 9, 2, 37, 100];
+            println!("sorted a: {:?}", a.sort());
+            for num in a {
+                let count = map.entry(num).or_insert(0);
+                *count += 1;
+            }
+            let mut hash_vec: Vec<(&i32, &i32)> = map.iter().collect();
+            println!("{:?}", hash_vec);
+            hash_vec.sort_by(|a, b| b.1.cmp(a.1));
+            println!("최빈값: {}", hash_vec[0].0);
+        }
+        {
+            let mut a = vec![1, 2, 100, 3, 4, 5, 6, 7, 9, 3, 7, 100, 37, 9, 2, 37, 100];
+            a.sort();
+            println!("sorted a: {:?}", a); // a.sort를 넣으면 아무 값도 안 나온다. 당연히.. sort 메소드는 sorted된 리스트를 리턴하는 게 아니니까..
+            println!("중간값: {}", a[a.len() / 2]); // 전체 length를 2로 나눈 값 번째의 인덱스를 구한다.
+        }
     }
 }
