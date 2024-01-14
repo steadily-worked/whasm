@@ -61,7 +61,7 @@ pub fn eat_at_restaurant() {
 fn deliver_order() {}
 
 mod back_of_house {
-    // struct에 `pub`를 사용하면 구조체는 공개되지만 구조체의 필드는 비공개로 유지된다. (이후 92행으로 이동)
+    // struct에 `pub`를 사용하면 구조체는 공개되지만 구조체의 필드는 비공개로 유지된다. (이후 79행으로 이동)
     pub struct Breakfast {
         pub toast: String,
         seasonal_fruit: String,
@@ -97,11 +97,11 @@ pub fn eat_breakfast_at_restaurant() {
     meal.toast = String::from("밀");
     println!("I'd like {} toast please", meal.toast);
 
-    // meal.seasonal_fruit = String::from("블루베리"); 이 줄을 주석해제하면 컴파일되지 않는다.
+    // meal.seasonal_fruit = String::from("블루베리"); 이 줄을 주석해제하면 컴파일되지 않는다. seasonal_fruit 필드는 private하므로
 
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
     //
 }
 // `back_of_house::Breakfast` 구조체의 `toast` 필드는 공개 필드이기 때문에 `eat_breakfast_at_restaurant` 함수에서 점 표기법으로 `toast`를 읽고 쓸 수 있지만,
-// `seasonal_fruit` 필드는 비공개 필드이기 때문에 `eat_breakfast_at_restaurant` 함수에서 사용할 수 없다: 92행의 주석을 해제하면 컴파일되지 않는다.
+// `seasonal_fruit` 필드는 비공개 필드이기 때문에 `eat_breakfast_at_restaurant` 함수에서 사용할 수 없다: 100행의 주석을 해제하면 컴파일되지 않는다.
