@@ -156,5 +156,28 @@ fn main() {
             println!("sorted a: {:?}", a); // a.sort를 넣으면 아무 값도 안 나온다. 당연히.. sort 메소드는 sorted된 리스트를 리턴하는 게 아니니까..
             println!("중간값: {}", a[a.len() / 2]); // 전체 length를 2로 나눈 값 번째의 인덱스를 구한다.
         }
+        {
+            let mut array = vec![String::from("apple"), String::from("break")];
+            let vowels = ['a', 'e', 'i', 'o', 'u'];
+            for word in &mut array {
+                if let Some(first_char) = word.chars().next() {
+                    if vowels.contains(&first_char) {
+                        word.push_str("-fay");
+                    } else {
+                        let mut new_word = String::new();
+                        let mut chars = word.chars();
+                        chars.next();
+                        for ch in chars {
+                            new_word.push(ch);
+                        }
+                        new_word.push('-');
+                        new_word.push(first_char);
+                        new_word.push_str("ay");
+                        *word = new_word
+                    }
+                }
+            }
+            println!("{:?}", array);
+        }
     }
 }
