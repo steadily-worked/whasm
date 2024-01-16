@@ -91,3 +91,7 @@ thread 'main' panicked at 'hello.txt should be included in this project: Os {
 code: 2, kind: NotFound, message: "No such file or directory" }',
 src/main.rs:5:10
 ```
+
+### 4. 에러 전파하기
+
+함수의 구현체에서 실패할 수도 있는 무언가를 호출할 때, 이 함수에서 에러를 처리하는 대신 이 함수를 호출하는 코드 쪽으로 에러를 반환하여 그쪽에서 수행할 작업을 결정하도록 할 수 있다. 이를 에러 전파하기(`propagating`)라고 하며 호출하는 코드 쪽에 더 많은 제어권을 주는 것인데, 호출하는 코드 쪽에는 에러를 어떻게 처리해야 하는지 결정하는 정보와 로직이 코드 컨텍스트 내에서 활용할 수 있는 것보다 더 많이 있을 수도 있기 때문이다.
