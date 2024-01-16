@@ -136,6 +136,7 @@ fn main() {
         }
 
         println!("{:?}", map);
+        // {"world": 2, "wonderful": 1, "hello": 1}
 
         {
             let mut map = HashMap::new();
