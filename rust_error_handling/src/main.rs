@@ -1,7 +1,8 @@
+mod panic_or_not_to_panic;
+
 use std::{
     fs::{self, File},
     io::ErrorKind,
-    thread::panicking,
 };
 
 fn main() {
