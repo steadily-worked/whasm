@@ -97,13 +97,12 @@ fn main() {
                 // let mut username_file = File::open("hello.txt")?; // 여기의 "?"는 Ok의 값을 변수 username_file에게 반환해 줄 것이다. 에러가 발생하면 "?"는 함수로부터 일찍 빠져나와 호출하는 코드에게 어떤 Err 값을 줄 것이다.
                 // username_file.read_to_string(&mut username)?;
                 File::open("hello.txt")?.read_to_string(&mut username)?;
-                // 91, 92행의 두 줄은 93행의 한 줄로 변경할 수 있다.
+                // 98, 99행의 두 줄은 100행의 한 줄로 변경할 수 있다.
                 Ok(username)
             }
             // 위의 코드와 같은 기능을 가진 read_username_from_file의 구현체인데, "?" 연산자를 이용한다.
             // "?"은 위의 match 표현식과 거의 같은 방식으로 동작하게끔 정의되어 있다. Result의 값이 Ok라면 Ok 안의 값이 얻어지고 Err라면 return 키워드로 에러 값을 호출하는 코드에게 전파하는 것처럼 Err의 값이 반환될 것이다.
             // "?" 연산자를 사용할 때의 에러 값들은 `from` 함수를 거친다. "?" 연산자가 from 함수를 호출하면, "?" 연산자가 얻게 되는 에러를 "?" 연산자가 사용된 현재 함수의 반환 타입에 정의된 에러 타입으로 변환한다.
-            //
         }
         {
             fn read_username_from_file() -> Result<String, io::Error> {
