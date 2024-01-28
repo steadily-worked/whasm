@@ -1,3 +1,5 @@
+use std::fmt::{Debug, Display};
+
 use aggregator::{NewsArticle, Summary, Tweet};
 // lib.rs에서 정의한 메소드들에 대해 `Cargo.toml`에서 package의 name을 aggregator로 지정해 준 이후부터 위와같이 불러와서 사용할 수 있게 된다.
 
@@ -25,6 +27,46 @@ fn main() {
         println!("New article available! {}", article.summarize());
         // New article available! (Read more...)
         // impl Summary for NewsArticle {} 로 정의했을 때를 기준으로 한다.
+    }
+    {
+        // '어떤' 타입의 `item` 파라미터에서 summarize 메소드를 호출하는 notify 함수
+        // pub fn notify(item: &impl Summary) {
+        // impl Trait 문법은 사실 trait bound로 일러진, 더 긴 형식의 syntactic sugar이다. trait bound는 아래와 같다.
+        pub fn notify<T: Summary>(item: &T) {
+            println!("Breaking news! {}", item.summarize());
+        }
+        // item 파라미터의 구체적 타입을 명시하는 대신 impl 키워드와 trait 이름을 명시했다. 이 파라미터에는 지정된 trait을 구현하는 타입이라면 어떤 타입이든 전달받을 수 있다.
+        // notify 본문 내에서는 item에서 summarize와 같은 Summary trait의 모든 메소드를 호출할 수 있다. notify는 NewsArticle 인스턴스로도, Tweet 인스턴스로도 호출할 수 있다.
+        // 만약 Summary trait를 구현하지 않는 String, i32 등의 타입으로 notify 함수를 호출하는 코드를 작성한다면 컴파일 에러가 발생한다.
+
+        // impl trait이 단순한 상황에서는 편리하고 코드를 더 간결하게 해주지만 trait bound 문법은 더 복잡한 상황을 표현할 수 있다.
+        pub fn _notify(item1: &impl Summary, item2: &impl Summary) {}
+        pub fn _notify2<T: Summary>(item1: &T, item2: &T) {}
+        // 만약 두 매개변수가 같은 타입으로 강제되어야 한다면, 위와 같이 trait bound를 사용해야 한다.
+    }
+    {
+        // trait bound는 여러개 지정될 수도 있다.
+        pub fn _notify(item: &(impl Summary + Display)) {
+            // ...
+            // notify 정의를 할 때 item이 Display, Summary를 모두 구현해야 하도록 지정해야 할 경우 위와 같이 선언하면 된다.
+        }
+        pub fn _notify2<T: Summary + Display>(item: &T) {
+            // ...
+        }
+
+        // trait bound가 너무 많아지는 것을 방지하기 위해 Rust는 trait bound를 함수 시그니처 뒤의 `where` 조항에 명시하는 대안을 제공한다.
+        fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+            // ...
+        }
+        // 위와 같이 명시하는 대신에 아래와 같이 where 조항을 사용할 수 있다.
+        fn _some_function<T, U>(t: &T, u: &U) -> i32
+        where
+            T: Display + Clone,
+            U: Clone + Debug,
+        {
+            // ...
+        }
+        // trait bound로 도배되지 않고 평범한 함수처럼 파라미터 목록, 반환 타입이 붙어있으니 함수 시그니처를 읽기 쉬워진다.
     }
 }
 
