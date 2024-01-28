@@ -1,4 +1,7 @@
-use std::fmt::{Debug, Display};
+use std::{
+    fmt::{Debug, Display},
+    iter::Sum,
+};
 
 use aggregator::{NewsArticle, Summary, Tweet};
 // lib.rs에서 정의한 메소드들에 대해 `Cargo.toml`에서 package의 name을 aggregator로 지정해 준 이후부터 위와같이 불러와서 사용할 수 있게 된다.
@@ -67,6 +70,42 @@ fn main() {
             // ...
         }
         // trait bound로 도배되지 않고 평범한 함수처럼 파라미터 목록, 반환 타입이 붙어있으니 함수 시그니처를 읽기 쉬워진다.
+        {
+            fn returns_summarizable() -> impl Summary {
+                Tweet {
+                    username: String::from("horse_ebooks"),
+                    content: String::from("of course, as you probably already know, people"),
+                    reply: false,
+                    retweet: false,
+                }
+            }
+            // 반환 타입에 구체적 타입명이 아닌 `impl Summary`를 작성하여, `returns_summarizable` 함수는 `Summary` trait을 구현하는 타입을 반환한다고 명시했다.
+            // 위의 경우 `returns_summarizable`는 `Tweet`를 반환하지만 이 함수를 호출하는 쪽의 코드에서는 구체적인 타입을 알 필요가 없다.
+
+            // 하지만, `impl Trait` 문법을 쓴다고 해서 다양한 타입을 반환할 수는 없다.
+            fn _returns_summarizable(switch: bool) -> impl Summary {
+                if switch {
+                    NewsArticle {
+                        headline: String::from("Penguins win the Stanley Cup Championship!"),
+                        location: String::from("Pittsburgh, PA, USA"),
+                        author: String::from("Iceburgh"),
+                        content: String::from(
+                            "The Pittsburgh Penguins once again are the best \
+                             hockey team in the NHL.",
+                        ),
+                    }
+                } else {
+                    Tweet {
+                        username: String::from("horse_ebooks"),
+                        content: String::from("of course, as you probably already know, people"),
+                        reply: false,
+                        retweet: false,
+                    }
+                }
+            }
+            // NewsArticle, Tweet 중 하나를 반환하는 행위는 impl Trait 문법이 컴파일러 내에 구현된 방식으로 인한 제약 때문에 허용되지 않는다.
+            // 함수가 이런 식으로 동작하도록 만드는 방법은 이후에 알아볼 예정이다.
+        }
     }
 }
 
