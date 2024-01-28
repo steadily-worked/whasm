@@ -1,4 +1,4 @@
-use aggregator::{Summary, Tweet};
+use aggregator::{NewsArticle, Summary, Tweet};
 // lib.rs에서 정의한 메소드들에 대해 `Cargo.toml`에서 package의 name을 aggregator로 지정해 준 이후부터 위와같이 불러와서 사용할 수 있게 된다.
 
 fn main() {
@@ -10,6 +10,21 @@ fn main() {
     };
     println!("1 new tweet: {}", tweet.summarize());
     // 1 new tweet: horse_ebooks: of course, as you probably already know, people
+    {
+        let article = NewsArticle {
+            headline: String::from("Penguins win the Stanley Cup Championship!"),
+            location: String::from("Pittsburgh, PA, USA"),
+            author: String::from("Iceburgh"),
+            content: String::from(
+                "The Pittsburgh Penguins once again are the best \
+                 hockey team in the NHL.",
+            ),
+        };
+
+        println!("New article available! {}", article.summarize());
+        // New article available! (Read more...)
+        // impl Summary for NewsArticle {} 로 정의했을 때를 기준으로 한다.
+    }
 }
 
 // aggregator 크레이트에 의존적인 다른 크레이트들 또한 Summary 크레이트를 스코프로 가져와서 자신들의 타입에 대해 Summary를 구현할 수 있다.
