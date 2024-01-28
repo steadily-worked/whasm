@@ -10,6 +10,7 @@ fn main() {
     };
     println!("1 new tweet: {}", tweet.summarize());
     // 1 new tweet: horse_ebooks: of course, as you probably already know, people
+    // 1 new tweet: (Read more from @horse_ebooks...) summarize_author를 구현한 경우 이와 같이 바뀌게 된다.
     {
         let article = NewsArticle {
             headline: String::from("Penguins win the Stanley Cup Championship!"),
