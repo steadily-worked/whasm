@@ -1,0 +1,23 @@
+[workspace]
+
+members = [
+    "rust_backyard_using_modules",
+    "rust_basic_concepts",
+    "rust_collection",
+    "rust_divide_modules",
+    "rust_enums",
+    "rust_error_handling",
+    "rust_generic",
+    "rust_guessing_game",
+    "rust_if_let",
+    "rust_loops",
+    "rust_match",
+    "rust_ownership",
+    "rust_rectangles_using_structs",
+    "rust_reference",
+    "rust_restaurant",
+    "rust_restaurant_2",
+    "rust_slice",
+    "rust_structs",
+    "rust_trait",
+]
