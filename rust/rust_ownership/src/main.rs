@@ -34,14 +34,21 @@ fn main() {
         // 이 println! 함수는 에러를 발생시킨다. 메모리에 대한 소유권이 s2에게로 넘어갔기 때문이다.
         // 얕은 복사와 비슷해 보이지만, Rust에서는 's1' 자체를 무효화 해버렸기 때문에 '얕은 복사'라기 보다는 'move(이동)'라고 부른다.
     }
-    // 힙 데이터까지 복사(deep copy)하고싶은 경우 `clone` 메소드를 사용한다.
     {
         let x = 5;
         let y = x;
+        const z: char = 'a';
 
         println!("x = {}, y = {}", x, y);
         // 이 경우 x는 왜 값을 갖고있을까? 그 이유는 정수처럼 '컴파일 시점에 크기가 알려진 타입'은 스택에 완전히 저장되므로 실제 값의 복사본을 빠르게 만들 수 있기 때문이다.
+        // 즉, String 타입과 다르게 스택에 완전하게 저장되어있는 값이기 때문에 복사가 가능하다?
+        // char 타입도, '한 글자'라는 정의에 따라 4 byte라는 값을 가지고 있기 때문에, 크기가 명확히 알려져 있으므로 복사가 된다.
         // 이 경우 deep copy와 shallow copy의 차이가 없다.
+
+        // 힙 데이터까지 깊게 복사(deep copy)하고싶은 경우 `clone` 메소드를 사용한다.
+        let s1 = String::from("hello");
+        let s2 = s1.clone();
+        println!("s1 = {}, s2 = {}", s1, s2);
     }
     // let y = x;
     // 위에서 언급한 Drop 함수(스코프를 벗어났을 때)가 실행됐을 때 복사를 하려고 하면 컴파일 에러가 발생한다.
@@ -81,11 +88,13 @@ fn takes_ownership(some_string: String) {
     // some_string이 이 스코프로 들어오며
     println!("{}", some_string);
 } // 여기서 some_string이 스코프로부터 빠져나가고 `drop` 함수가 실행된다. 메모리가 해제된다.
+  // 리턴값을 주지 않으므로, 소유권도 넘어가지 않고 이 함수의 소유가 되는 것.
 
 fn makes_copy(some_integer: i32) {
     // some_integer가 스코프로 들어오며
     println!("{}", some_integer);
 } // 여기서 some_integer이 스코프로부터 빠져나가지만 특별한 일이 발생하진 않는다.
+  // i32는 복사가 가능하기 때문이다.
 
 fn gives_ownership() -> String {
     // 이 함수는, return value를 함수 내부로 옮기고 실행시킨다.
