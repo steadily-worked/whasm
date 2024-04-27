@@ -128,4 +128,58 @@ fn 문자열() {
 
 fn 해시맵() {
     // 어떤 값을 특정한 키와 연관지어 주도록 해줌
+    // 키와 값은 모두 같은 타입이어야 함.
+
+    use std::collections::HashMap; // 세가지 컬렉션중 제일 덜 사용되어서, use로 가져와야함.
+
+    // HashMap::new()로 선언 후 insert하기
+    let mut 해시맵 = HashMap::new();
+    해시맵.insert(String::from("블루"), 10);
+    해시맵.insert(String::from("빨강"), 20);
+
+    let 팀이름 = String::from("블루");
+    // let 점수 = 해시맵.get(&팀이름).copied().unwrap_or(0);
+    let 점수 = 해시맵.get(&팀이름).unwrap_or(&0);
+    // 이렇게 해주면 안되나?
+    println!("{:?}", 점수);
+    println!("{}", 점수);
+    // get 메소드는 Option<&V>를 반환함. copied()를 통해 Option<V>로 가져와서,
+    // unwrap_or()을 통해 '점수'가 해당 키에 대한 아이템을 갖고 있지 않을 경우 점수에 0을 설정하도록 처리함.
+    // 여기서, 왜 Option<V>를 가져오는지? -> get은 참조자를 반환하기 때문에, copied()를 통해 값을 복사해야 함.
+
+    // for 루프를 통해 해시맵의 각 키와 값을 순회할 수 있음.
+    for (팀이름, 점수) in &해시맵 {
+        println!("{}: {}", 팀이름, 점수);
+    }
+
+    let 유효하지_않아질_이름 = String::from("색상");
+    let 유효하지_않아질_색상 = String::from("노랑");
+
+    let mut 색상_해시맵 = HashMap::new();
+    색상_해시맵.insert(유효하지_않아질_이름, 유효하지_않아질_색상);
+    // HashMap에 insert한 순간부터 이름과 색상은 유효하지 않게 됨(즉, 사용 불가).
+    // println!("{}: {}", 유효하지_않아질_이름, 유효하지_않아질_색상);
+
+    // 해시맵 업데이트하기
+
+    // 1. 덮어쓰기
+    해시맵.insert(String::from("블루"), 25);
+    println!("{:?}", 해시맵);
+
+    // 2. 키가 없을 때만 값 추가하기
+    해시맵.entry(String::from("블루")).or_insert(50);
+    해시맵.entry(String::from("노랑")).or_insert(50);
+    println!("{:?}", 해시맵);
+
+    // 3. 예전 값에 기초하여 값 업데이트하기
+    let 샘플_텍스트 = "안녕 세상 좋은 세상";
+    let mut 해시맵2 = HashMap::new();
+
+    for 단어 in 샘플_텍스트.split_whitespace() {
+        let 개수 = 해시맵2.entry(단어).or_insert(0);
+        // '개수' 변수에 가변 참조자를 저장하고, 여기에 값을 할당하기 위해 '개수'를 역참조함.
+        *개수 += 1;
+    }
+    println!("{:?}", 해시맵2);
+    // "안녕", "세상", "좋은"의 출력 순서는 보장되지 않음.
 }
