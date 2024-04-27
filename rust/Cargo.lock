@@ -157,3 +157,7 @@ version = "0.1.0"
 [[package]]
 name = "일반적인_프로그래밍_개념"
 version = "0.1.0"
+
+[[package]]
+name = "패키지"
+version = "0.1.0"
