@@ -1,3 +1,9 @@
+use crate::garden::vegetables::Asparagus;
+
+pub mod garden;
+// 컴파일러에게 `src/garden.rs`의 코드를 모두 포함할 것을 알려줌
+
 fn main() {
-    // 러스트에는 코드 조직화에 필요한 기능들이 여러가지가 있다. 이를 통틀어 모듈 시스템이라고 한다.
+    let plant = Asparagus {};
+    println!("I'm growing {:?}!", plant);
 }
