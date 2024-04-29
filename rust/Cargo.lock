@@ -159,6 +159,13 @@ name = "열거형"
 version = "0.1.0"
 
 [[package]]
+name = "외부_패키지_사용"
+version = "0.1.0"
+dependencies = [
+ "rand",
+]
+
+[[package]]
 name = "일반적인_프로그래밍_개념"
 version = "0.1.0"
 
