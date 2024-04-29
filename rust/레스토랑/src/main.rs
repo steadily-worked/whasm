@@ -11,7 +11,7 @@ fn main() {
 
     // 같은 이름의 타입을 사용할 때는, 어떤 Result를 우리가 사용하고 싶은지 러스트가 알 수 있도록
     // 모듈까지만 불러와서 모듈::타입 의 형태로 작성해줘야 한다.
-    // use std::fmt::Result, us std::io::Result; 로 불러오면 안됨.
+    // use std::fmt::Result, use std::io::Result; 로 불러오면 안됨.
 
     fn 함수1() -> fmt::Result {
         Ok(())
