@@ -20,6 +20,7 @@ members = [
     "rust_slice",
     "rust_structs",
     "rust_trait",
+    "라이프타임",
     "레스토랑",
     "비교",
     "열거형",
@@ -27,5 +28,6 @@ members = [
     "일반적인_프로그래밍_개념",
     "제네릭",
     "컬렉션",
+    "trait",
     "패키지",
 ]
