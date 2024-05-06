@@ -106,6 +106,26 @@ fn 요약_생성() -> impl Summary {
 // }
 // 트윗 혹은 뉴스기사 중 하나를 반환하는 행위는, `impl Trait` 문법이 컴파일러 내에 구현된 방식으로 인한 제약 때문에 허용되지 않는다.
 
+// 아래와 같이 dynamic dispatch를 사용하면 여러 타입을 반환할 수 있음.
+// fn 요약_생성_2(조건: bool) -> Box<dyn Summary> {
+// fn 요약_생성_2<T: Summary>(조건: bool) -> T {
+//     if 조건 {
+//         Box::new(트윗 {
+//             사용자: String::from("horse_ebooks"),
+//             내용: String::from("of course, as you probably already know, people"),
+//             댓글: false,
+//             리트윗: false,
+//         })
+//     } else {
+//         Box::new(뉴스기사 {
+//             제목: String::from("프로그래밍 언어 Rust의 특징"),
+//             소속: String::from("Rust 프로그래밍 언어"),
+//             저자: String::from("Rustacean"),
+//             본문: String::from("Rust는 안전하고 빠르며, 실수를 줄이는 프로그래밍 언어입니다."),
+//         })
+//     }
+// }
+
 // 트레이트 바운드를 사용해 조건부로 메서드 구현하기
 // 제네릭 타입 파라미터를 사용하는 impl 블록에 트레이트 바운드를 이용하면, 지정된 트레이트를 구현하는 타입에 대해서만 메소드를 구현할 수도 있다.
 // 아래 예시는, T 타입이 Display 트레이트를 구현하는 경우에만 요약_표시 메소드를 구현한다.
@@ -136,6 +156,16 @@ impl<T: Display + PartialOrd> 쌍<T> {
 // 타입이 특정 트레이트를 구현하는 경우에만, 해당 타입에 트레이트를 구현할 수도 있다.
 // 트레이트 바운드를 만족하는 모든 타입에 대해 트레이트를 구현하는 것을 포괄 구현(blanket implementations)이라고 하고, 러스트 표준 라이브러리에서 광범위하게 사용된다.
 // ex) 표준 라이브러리는 Display 트레이트를 구현하는 모든 타입에 ToString 트레이트도 구현한다.
+pub trait 출력 {
+    fn print_out(&self);
+}
+
+impl<T: Display> 출력 for T {
+    fn print_out(&self) {
+        println!("{}", self)
+    }
+}
+
 impl<T: Display> ToString for T {
     fn to_string(&self) -> String {
         todo!()
