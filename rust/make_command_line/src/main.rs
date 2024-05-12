@@ -185,7 +185,7 @@ fn lib_에서_가져온_것_사용하기() {
     let args: Vec<String> = env::args().collect();
     let config = make_command_line::Config::build(&args).unwrap();
 
-    if let Err(e) = make_command_line::search를_사용하는_run(config) {
+    if let Err(e) = make_command_line::run(config) {
         println!("Application error: {}", e);
         exit(1);
     }
