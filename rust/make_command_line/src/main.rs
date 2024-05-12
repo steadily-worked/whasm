@@ -178,12 +178,12 @@ fn run_써보기() {
 
 // 이제 Config 구조체, Config 구현체, run 함수를 lib.rs로 옮긴다.
 // 이제 main.rs는 다음과 같이 간단해진다.
-use make_command_line::Config2;
+use make_command_line;
 use std::process::exit;
 
 fn lib_에서_가져온_것_사용하기() {
     let args: Vec<String> = env::args().collect();
-    let config = Config2::build(&args).unwrap(); // 왜 여기에 unwrap을 넣어야할까?
+    let config = make_command_line::Config::build(&args).unwrap();
 
     if let Err(e) = make_command_line::run(config) {
         println!("Application error: {}", e);
