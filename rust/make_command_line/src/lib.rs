@@ -188,3 +188,6 @@ pub fn 대소문자_구분_안하는_찾기함수를_사용하는_run(
 // How dreary to be somebody!
 // To tell your name the livelong day
 // To an admiring bog!
+
+// 이 커맨드라인이 출력하는 내용들이, 현재 표준 에러 쪽에 출력하고 싶은 메시지를 포함하여 어떤식으로 표준 출력에 기록되는지 관찰해보자.
+// cargo run > output.txt

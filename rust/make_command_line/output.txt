@@ -1,0 +1,1 @@
+["/Users/sangminpark/Desktop/whasm/rust/target/debug/make_command_line"]

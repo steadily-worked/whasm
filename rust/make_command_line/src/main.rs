@@ -189,4 +189,19 @@ fn lib_에서_가져온_것_사용하기() {
         println!("Application error: {}", e);
         exit(1);
     }
+
+    // 표준 에러 출력 시 사용할 것
+    // let args: Vec<String> = env::args().collect();
+    // let config = make_command_line::Config::build(&args).unwrap_or_else(|err| {
+    //     eprintln!("Problem parsing arguments: {}", err);
+    //     exit(1);
+    // });
+
+    // if let Err(e) = make_command_line::run(config) {
+    //     eprintln!("Application error: {}", e);
+    //     exit(1);
+    // }
 }
+// 이제 cargo run > output.txt 를 실행하면 Problem parsing arguments: not enough arguments 만 뜨게 되고 output.txt에는 실제로 아무 값도 나오지 않는다.
+// 다시한번 cargo run -- to poem.txt > output.txt 를 실행하면 output.txt에는 poem.txt 파일의 내용이 출력된다.
+// eprintln!을 통해 성공적인 출력에 대해서는 표준 출력을, 에러 출력에 대해서는 표준 에러를 적절히 사용하고 있음을 입증한다.
