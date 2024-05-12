@@ -30,5 +30,5 @@ members = [
     "컬렉션",
     "trait",
     "패키지",
-    "make_command_line",
+    "make_command_line", "반복자와_클로저",
 ]
