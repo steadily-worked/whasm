@@ -163,6 +163,10 @@ name = "레스토랑"
 version = "0.1.0"
 
 [[package]]
+name = "반복자"
+version = "0.1.0"
+
+[[package]]
 name = "반복자와_클로저"
 version = "0.1.0"
 
