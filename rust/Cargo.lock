@@ -24,6 +24,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "iterator"
+version = "0.1.0"
+
+[[package]]
 name = "libc"
 version = "0.2.153"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -160,10 +164,6 @@ version = "0.1.0"
 
 [[package]]
 name = "레스토랑"
-version = "0.1.0"
-
-[[package]]
-name = "반복자"
 version = "0.1.0"
 
 [[package]]

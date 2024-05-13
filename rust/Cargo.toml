@@ -32,5 +32,5 @@ members = [
     "패키지",
     "make_command_line",
     "클로저",
-    "반복자",
+    "iterator",
 ]
