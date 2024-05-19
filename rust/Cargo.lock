@@ -179,6 +179,10 @@ name = "비교"
 version = "0.1.0"
 
 [[package]]
+name = "순환참조"
+version = "0.1.0"
+
+[[package]]
 name = "열거형"
 version = "0.1.0"
 
