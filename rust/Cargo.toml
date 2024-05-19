@@ -33,4 +33,5 @@ members = [
     "make_command_line",
     "클로저",
     "iterator",
+    "smart_pointer",
 ]
