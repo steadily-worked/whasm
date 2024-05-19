@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use smart_pointer::{MyBox, 커스텀_스마트_포인터};
 
@@ -12,6 +12,8 @@ fn main() {
     drop_트레이트();
     값을_일찍_버리기();
     rc_참조_카운트();
+    // ref_cell와_내부_가변성_패턴(); lib.rs 참고.
+    rc와_refcell_조합();
 }
 
 fn box_개념() {
@@ -160,3 +162,35 @@ fn rc_참조_카운트() {
     // 그다음 b와 c를 만들때는 Rc::clone 함수를 호출하고 a의 Rc<List>에 대한 참조자를 인수로서 넘김.
     // Rc::clone(&a) 대신 a.clone()을 호출할 수도 있지만, 위의 경우 러스트의 관례는 Rc::clone을 이용하는 것.
 }
+
+fn rc와_refcell_조합() {
+    enum List {
+        Cons(Rc<RefCell<i32>>, Rc<List>),
+        Nil,
+    }
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+
+    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+
+    *value.borrow_mut() += 10;
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
+}
+
+// Rc<RefCell<i32>>의 값을 생성 -> value에 저장
+// value를 갖고있는 Cons variant로 List를 생성하여 a에 삽입
+// value는 클론되어 value가 가진 내부의 값 5에 대한 소유권이 a로 이동되거나, a가 value로부터
+// 빌려오는 것이 아니라 a와 value 모두가 이값에 대한 소유권을 갖도록 할 필요가 있음.
+// a, b와 c 리스트가 생성된이후 value 값에 10을 더하면(borrow_mut 메소드를 이용하여)
+// Rc<T>를 역참조하여 안에있는 RefCell<T> 값을 얻어옴. borrow_mut 메소드는 RefMut<T> 스마트 포인터를
+// 반환하고 여기에 역참조 연산자를 사용한 다음 내부 값을 변경함
+// 이제 a - c를 출력하면 모두 변경된 값인 15를 갖게 됨.
+// RefCell<T>를 사용하면 표면상으로는 불변인 List를 갖게되지만 데이터를 변경할 필요가 생기면
+// 내부 가변성 접근기능을 제공하는 RefCell<T>의 메소드를 사용하여 그렇게 할수있음
+// 런타임 대여규칙 검사는 데이터 경합으로부터 우리를 지켜주고 데이터 구조에 대한 이런 유연성을 위해
+// 약간의 속도를 맞바꾸는 것이 때로는 가치가있음.
