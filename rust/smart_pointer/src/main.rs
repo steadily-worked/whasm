@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use smart_pointer::{MyBox, 커스텀_스마트_포인터};
 
 fn main() {
@@ -9,6 +11,7 @@ fn main() {
     암묵적_역참조_강제();
     drop_트레이트();
     값을_일찍_버리기();
+    rc_참조_카운트();
 }
 
 fn box_개념() {
@@ -103,10 +106,10 @@ fn 암묵적_역참조_강제() {
 }
 
 fn drop_트레이트() {
-    let c = 커스텀_스마트_포인터 {
+    let _c = 커스텀_스마트_포인터 {
         데이터: String::from("안녕하세요"),
     };
-    let d = 커스텀_스마트_포인터 {
+    let _d = 커스텀_스마트_포인터 {
         데이터: String::from("안녕히가세요"),
     };
     println!("커스텀 포인터가 생성되었다.")
@@ -129,4 +132,31 @@ fn 값을_일찍_버리기() {
     drop(c);
     // "std::mem::drop"은 러스트의 표준 라이브러리에 있어서, 불러오지 않고도 사용할 수 있음.
     println!("main 함수가 끝나기 전에 커스텀 포인터가 제거되었다.")
+}
+
+fn rc_참조_카운트() {
+    // 두 개의 리스트를 만들고, 이 둘이 모두 세 번째 리스트의 소유권을 공유하도록 함.
+    // enum List {
+    //     Cons(i32, Box<List>),
+    //     Nil,
+    // }
+
+    // let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
+    // let b = Cons(3, Box::new(a));
+    // let c = Cons(4, Box::new(a));
+    // Cons variant는 자신이 들고있는 데이터를 소유하므로, b 리스트를 만들 때 a는 b 안으로 이동되어
+    // b의 소유가 된다. 그다음 c를 생성할 때 a는 이미 이동되었으므로 a를 다시 사용할 수 없다.
+    // 이 상황에서, Box<List>를 Rc<List>로 변경하면 가능해진다.
+    enum List {
+        Cons(i32, Rc<List>),
+        Nil,
+    }
+
+    let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
+    let b = Cons(3, Rc::clone(&a));
+    let c = Cons(4, Rc::clone(&a));
+    // Rc는 prelude에 포함되어있지 않아서, 이를 스코프로 가져오려면 use 구문을 추가해야함.
+    // main 안에서 5, 10을 갖고있는 리스트가 만들어지고 이것이 a의 새로운 Rc<List>에 저장됨.
+    // 그다음 b와 c를 만들때는 Rc::clone 함수를 호출하고 a의 Rc<List>에 대한 참조자를 인수로서 넘김.
+    // Rc::clone(&a) 대신 a.clone()을 호출할 수도 있지만, 위의 경우 러스트의 관례는 Rc::clone을 이용하는 것.
 }

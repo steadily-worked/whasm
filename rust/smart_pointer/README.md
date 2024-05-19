@@ -87,3 +87,46 @@ help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to make `List` repre
 - 그러나 가끔 값을 일찍 정리하고 싶을 때도 있다:
   - lock을 관리하는 스마트 포인터를 이용할 때: 강제로 `drop` 메소드를 실행하여 락을 해제해서, 같은 스코프의 다른 코드에서 해당 lock을 얻도록 하고 싶을 수도 있다.
 - 러스트는 수동으로 `Drop` 트레이트의 `drop` 메소드를 호출하게 해주지는 않는 대신, 표준 라이브러리가 제공하는 `std::mem::drop` 함수를 호출하여 스코프가 끝나기 전에 강제로 값을 버리도록 할 수 있다.
+
+## `Rc<T>`, 참조 카운트 스마트 포인터
+
+- 대부분의 경우에서 소유권은 명확하지만, 하나의 값이 여러 개의 소유자를 가질 수 있는 경우도 있다:
+  - ex) 그래프 데이터 구조에서 여러 edge가 동일한 node를 가리킬 수도 있고,
+  - 그 node는 개념적으로 해당 node를 가리키는 모든 edge에 의해 소유된다.
+  - 여기서 node는, **어떠한 edge도 이를 가리키지 않아 소유자가 하나도 없는 상태**가 아니라면 메모리 정리가 되어서는 안 됨.
+- 명시적으로 복수 소유권을 가능하게 하려면 러스트의 `Rc<T>` 타입을 이용해야 함. 이는 참조 카운팅(reference counting)의 약자이다.
+  - `Rc<T>` 타입은, 어떤 값의 참조자 개수를 계속 추적하여 해당 값이 계속 사용 중인지를 판단한다:
+    - 만일 어떤 값에 대한 참조자가 0개라면 이 값의 메모리 정리를 하더라도, 유효하지 않은 참조자가 발생하지 않을 수 있다. -> 왜 "않을 수 있다"일까? 무조건 아닌 게 아닌가?
+  - `Rc<T>` 타입은 프로그램의 여러 부분에서 읽을 데이터를 힙에 할당하고 싶은데 컴파일 타임에는 어떤 부분이 그 데이터를 마지막에 이용하게 될지 알 수 없는 경우 사용된다. 만일 어떤 부분이 마지막으로 사용되는지 알았다면, 그냥 그 해당 부분을 데이터의 소유자로 만들면 되고 보통의 소유권 규칙이 컴파일 타임에 수행되어 효력을 발생시킬 것이다.
+  - 참조: `Rc<T>`는 오직 싱글 스레드 시나리오 용이다.
+- [링크](https://github-production-user-asset-6210df.s3.amazonaws.com/61453718/331867408-d1760f15-4b21-4119-a42d-428ebc3d09b6.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240519%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240519T112251Z&X-Amz-Expires=300&X-Amz-Signature=5fbae23581bd4231a28350899877df979240b618fe548ef7514bae531b65eb6d&X-Amz-SignedHeaders=host&actor_id=61453718&key_id=0&repo_id=633763124) 참고
+
+## `Rc<T>`를 클론하는 것은 참조 카운트를 증가시킨다.
+
+```rs
+fn main() {
+    let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
+    println!("count after creating a = {}", Rc::strong_count(&a));
+    let b = Cons(3, Rc::clone(&a));
+    println!("count after creating b = {}", Rc::strong_count(&a));
+    {
+        let c = Cons(4, Rc::clone(&a));
+        println!("count after creating c = {}", Rc::strong_count(&a));
+    }
+    println!("count after c goes out of scope = {}", Rc::strong_count(&a));
+}
+```
+
+내부 스코프가 `c`를 감싸도록 하면, `c`가 스코프 밖으로 벗어날 때 참조 카운트가 어떻게 바뀌는지 볼 수 있다(`strong_count`인 이유는, `weak_count`도 있기 때문).
+
+```bash
+count after creating a = 1
+count after creating b = 2
+count after creating c = 3
+count after c goes out of scope = 2
+```
+
+- `a`의 `Rc<List>`는 초기 참조 카운트 1을 갖고 있음을 볼 수 있다. 이후 `clone`을 호출할 때마다 카운트가 1씩 증가한다. `c`가 스코프 밖으로 벗어난 후에는 1이 감소한다. 참조 카운트를 감소시키기 위해 어떤 함수를 호출할 필요는 없다: `Rc<T>` 값이 스코프 밖으로 벗어나면, `Drop` 트레이트의 구현체가 자동으로 참조 카운트를 감소시킨다.
+- `main`의 끝부분에서 `b`와 그다음 `a`가 스코프 밖으로 벗어나서 카운트가 0이되고 그시점에서 `Rc<List>`가 완전히 메모리 정리되는 것은 이 예제에서 볼 수가 없다: `Rc<T>`를 이용하면 단일 값이 복수 소유자를 갖도록 할 수 있고, 그 개수는 소유자 중 누구라도 계속 존재하는 한 해당 값이 계속 유효하도록 보장해 준다.
+
+- `Rc<T>`는 불변 참조자를 통해 읽기 전용으로 프로그램의 여러 부분에서 데이터를 공유하도록 해준다. 만일 `Rc<T>`가 여러 개의 가변 참조자도 만들도록 해준다면, 대여 규칙 중 하나를 위반할지도 모른다: 동일한 위치에서 여러 개의 가변 대여는 데이터 경합 및 불일치를 야기할 수 있다.
