@@ -33,5 +33,7 @@ members = [
     "make_command_line",
     "클로저",
     "iterator",
-    "smart_pointer", "순환참조",
+    "smart_pointer",
+    "순환참조",
+    "make_gui",
 ]
