@@ -1,3 +1,5 @@
+mod todo;
+
 #[tokio::main]
 async fn main() {
     init_tracing(); // 서비스 및 해당 라이브러리에 대한 추적 & 로깅 초기화
