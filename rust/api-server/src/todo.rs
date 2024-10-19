@@ -1,4 +1,5 @@
 use axum::Error;
+use serde::Deserialize;
 use sqlx::{query_as, SqlitePool};
 
 #[derive(Serialize, Debug, sqlx::FromRow)]
@@ -8,6 +9,33 @@ pub struct Todo {
     completed: bool,
     created_at: NativeDateTime,
     updated_at: NativeDateTime,
+}
+
+#[derive(Deserialize)]
+pub struct CreateTodo {
+    body: String
+}
+
+impl CreateTodo {
+    pub fn body(&self) -> &str {
+        self.body.as_str()
+    }
+}
+
+#[derive(Deserialize)]
+pub struct UpdateTodo {
+    body: String,
+    completed: bool,
+}
+
+impl UpdateTodo {
+    pub fn body(&self) -> &str {
+        self.body.as_str()
+    }
+
+    pub fn completed(&self) -> bool {
+        self.completed
+    }
 }
 
 impl Todo {
