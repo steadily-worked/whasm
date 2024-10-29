@@ -32,7 +32,7 @@ pub struct UpdateTodo {
 
 impl UpdateTodo {
     pub fn body(&self) -> &str {
-        self.body.as_str()
+        self.body.as_ref()
     }
 
     pub fn completed(&self) -> bool {
@@ -72,10 +72,11 @@ impl Todo {
         update_todo: UpdateTodo,
     ) -> Result<Todo, Error> {
         query_as("update todos set body = ?, completed = ?, updated_at = datetime('now') where where id = ? returning *")
+        // returning *: 레코드 삽입 후 즉시 검색하기 위함
             .bind(update_todo.body()) // "?"를 사용하여, SQL 문 내 선언 순서대로 바인딩됨.
             .bind(update_todo.completed())
             .bind(id)
-        .fetch_one(&dbpool) // 이 쿼리의 실행으로, 하나의 행이 반환될 것으로 기대됨.
+        .fetch_one(&dbpool) // 하나의 행이 반환될 것으로 기대되므로 하나만 가져옴.
         .await
         .map_err(Into::into)
     }
