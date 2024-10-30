@@ -1,4 +1,3 @@
-use error::Error;
 use router::create_router;
 
 mod api;
@@ -13,7 +12,8 @@ async fn main() {
 
     let router = create_router(dbpool).await; // 라우터 생성
 
-    let bind_addr = std::env::var("BIND_ADDR").unwrap_or_else(|_| "127.0.0.1:3000".to_string()); // BIND_ADDR 환경변수에서 주소를 가져오거나, 없으면 127.0.0.1:3000을 기본으로 설정
+    let bind_addr = std::env::var("BIND_ADDR").unwrap_or_else(|_| "127.0.0.1:3000".to_string());
+    // BIND_ADDR 환경변수에서 주소를 가져오거나, 없으면 127.0.0.1:3000을 기본으로 설정
 
     axum_server::bind(bind_addr.parse().unwrap())
         .serve(router.into_make_service())
@@ -43,7 +43,7 @@ fn init_tracing() {
 
 // 연결 pool을 사용해서 DB에 대한 연결을 얻음. connection pool 사용 시 각 요청에 대한 새로운 연결을 생성할 필요가 없이
 // DB에 대한 기존 연결을 얻어 재사용할 수 있음.
-async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Sqlite>, Error> {
+async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Sqlite>, sqlx::Error> {
     use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
     use std::str::FromStr;
 
