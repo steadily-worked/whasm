@@ -8,7 +8,9 @@ pub async fn create_router(dbpool: Pool<Sqlite>) -> Router {
 
     Router::new()
         .route("/alive", get(|| async { "ok" }))
+        // 현재 서버가 살아있는지 확인. 무조건 ok만 반환함
         .route("/ready", get(ping))
+        // 현재 서버가 준비되었는지 확인. 데이터베이스 연결 확인
         .nest(
             "/v1",
             Router::new()

@@ -41,7 +41,7 @@ fn init_tracing() {
         .init();
 }
 
-// 연결 pool을 사용해서 DB에 대한 연결을 얻음. connection pool 사용 시 각 요청에 대한 새로운 연결을 생성할 필요가 없이
+// connection pool을 사용해서 DB에 대한 연결을 얻음. connection pool 사용 시 각 요청에 대한 새로운 연결을 생성할 필요가 없이
 // DB에 대한 기존 연결을 얻어 재사용할 수 있음.
 async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Sqlite>, sqlx::Error> {
     use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
@@ -53,7 +53,8 @@ async fn init_dbpool() -> Result<sqlx::Pool<sqlx::Sqlite>, sqlx::Error> {
     // 이 경우 현재 디렉토리 내 `db.sqlite` 라는 파일이 열림.
 
     let dbpool = SqlitePoolOptions::new()
-        .connect_with(SqliteConnectOptions::from_str(&db_connection_str)?.create_if_missing(true)) // DB가 없을 때 드라이버에 DB를 생성하도록 요청
+        .connect_with(SqliteConnectOptions::from_str(&db_connection_str)?.create_if_missing(true))
+        // DB가 없을 때 드라이버에 DB를 생성하도록 요청
         .await
         .expect("can't connect to DB");
 
